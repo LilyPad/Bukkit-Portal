@@ -4,7 +4,6 @@ import lilypad.bukkit.portal.gate.Gate;
 
 import org.bukkit.entity.Player;
 
-
 public interface IRedirector {
 
 	public void requestRedirect(Player player, Gate gate);

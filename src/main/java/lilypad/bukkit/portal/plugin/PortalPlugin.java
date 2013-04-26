@@ -133,7 +133,7 @@ public class PortalPlugin extends JavaPlugin implements IRedirector, IConnector 
 	}
 
 	public void redirectLastServer(String username, String server) {
-		if(!this.getConfig().getBoolean("redirect", false)) {
+		if(!this.getConfig().getBoolean("redirectLastServer", false)) {
 			return;
 		}
 		UserRedirectorTask userRedirector = new UserRedirectorTask(username, server, this);

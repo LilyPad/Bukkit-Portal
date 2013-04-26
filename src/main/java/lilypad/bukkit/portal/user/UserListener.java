@@ -48,15 +48,17 @@ public class UserListener implements Listener, MessageEventListener {
 		this.redirector.respondRedirect(player, fromServer);
 		user.setServer(this.connector.getConnect().getSettings().getUsername());
 		user.setFromServer(null);
-		final Gate gate = this.gateRegistry.getByDestinationServer(fromServer);
-		if(gate == null) {
-			return;
-		}
-		this.plugin.getServer().getScheduler().scheduleSyncDelayedTask(this.plugin, new Runnable() {
-			public void run() {
-				player.teleport(new Location(Bukkit.getServer().getWorld(gate.getOutwardWorld()), gate.getOutwardX(), gate.getOutwardY(), gate.getOutwardZ(), gate.getOutwardYaw(), 0));
+		if(this.plugin.getConfig().getBoolean("spawnAtPortalEndpoint", false)) {
+			final Gate gate = this.gateRegistry.getByDestinationServer(fromServer);
+			if(gate == null) {
+				return;
 			}
-		}, 1L);
+			this.plugin.getServer().getScheduler().scheduleSyncDelayedTask(this.plugin, new Runnable() {
+				public void run() {
+					player.teleport(new Location(Bukkit.getServer().getWorld(gate.getOutwardWorld()), gate.getOutwardX(), gate.getOutwardY(), gate.getOutwardZ(), gate.getOutwardYaw(), 0));
+				}
+			}, 1L);
+		}
 	}
 
 	public void onMessage(Connect connect, MessageEvent messageEvent) {
