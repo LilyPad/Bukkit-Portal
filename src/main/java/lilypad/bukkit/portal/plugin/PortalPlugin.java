@@ -63,6 +63,9 @@ public class PortalPlugin extends JavaPlugin implements IRedirector, IConnector 
 		} catch(Exception exception) {
 			exception.printStackTrace();
 		}
+		for(Player player : this.getServer().getOnlinePlayers()) {
+			this.userListener.getUser(player.getName());
+		}
 	}
 
 	@Override
@@ -107,9 +110,9 @@ public class PortalPlugin extends JavaPlugin implements IRedirector, IConnector 
 		}
 	}
 	
-	public void respondRedirect(Player player, String server) {
+	public void announceRedirect(Player player) {
 		try {
-			this.getConnect().request(new MessageRequest(server, "lpPortal", "RESPONSE " + player.getName()));
+			this.getConnect().request(new MessageRequest("*", "lpPortal", "ANNOUNCE " + player.getName()));
 		} catch(Exception exception) {
 			exception.printStackTrace();
 		}

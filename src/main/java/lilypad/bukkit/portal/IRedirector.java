@@ -8,7 +8,7 @@ public interface IRedirector {
 
 	public void requestRedirect(Player player, Gate gate);
 	
-	public void respondRedirect(Player player, String server);
+	public void announceRedirect(Player player);
 
 	public void redirect(String username, String server);
 	

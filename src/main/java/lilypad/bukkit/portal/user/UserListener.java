@@ -16,7 +16,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.Plugin;
 
-
 public class UserListener implements Listener, MessageEventListener {
 
 	private Plugin plugin;
@@ -45,7 +44,7 @@ public class UserListener implements Listener, MessageEventListener {
 			this.redirector.redirectLastServer(user.getName(), user.getServer());
 			return;
 		}
-		this.redirector.respondRedirect(player, fromServer);
+		this.redirector.announceRedirect(player);
 		user.setServer(this.connector.getConnect().getSettings().getUsername());
 		user.setFromServer(null);
 		if(this.plugin.getConfig().getBoolean("spawnAtPortalEndpoint", false)) {
@@ -73,7 +72,7 @@ public class UserListener implements Listener, MessageEventListener {
 			if(message[0].equals("REQUEST")) {
 				this.redirector.redirect(message[1], this.connector.getConnect().getSettings().getUsername());
 				this.getUser(message[1]).setFromServer(messageEvent.getSender());
-			} else if(message[0].equals("RESPONSE")) {
+			} else if(message[0].equals("ANNOUNCE")) {
 				this.getUser(message[1]).setServer(messageEvent.getSender());
 			}
 		} catch(Exception exception) {
