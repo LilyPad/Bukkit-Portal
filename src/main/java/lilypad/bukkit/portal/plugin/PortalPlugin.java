@@ -1,6 +1,7 @@
 package lilypad.bukkit.portal.plugin;
 
 import java.io.File;
+import java.util.Collections;
 
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -110,9 +111,10 @@ public class PortalPlugin extends JavaPlugin implements IRedirector, IConnector 
 		}
 	}
 	
+	@SuppressWarnings("unchecked")
 	public void announceRedirect(Player player) {
 		try {
-			this.getConnect().request(new MessageRequest("*", "lpPortal", "ANNOUNCE " + player.getName()));
+			this.getConnect().request(new MessageRequest(Collections.EMPTY_LIST, "lpPortal", "ANNOUNCE " + player.getName()));
 		} catch(Exception exception) {
 			exception.printStackTrace();
 		}
