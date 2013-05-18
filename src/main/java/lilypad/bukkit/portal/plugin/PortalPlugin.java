@@ -107,7 +107,7 @@ public class PortalPlugin extends JavaPlugin implements IRedirector, IConnector 
 				}
 			});
 		} catch(Exception exception) {
-			exception.printStackTrace();
+			// ignore
 		}
 	}
 	
@@ -116,7 +116,7 @@ public class PortalPlugin extends JavaPlugin implements IRedirector, IConnector 
 		try {
 			this.getConnect().request(new MessageRequest(Collections.EMPTY_LIST, "lpPortal", "ANNOUNCE " + player.getName()));
 		} catch(Exception exception) {
-			exception.printStackTrace();
+			// ignore
 		}
 	}
 	
@@ -124,7 +124,7 @@ public class PortalPlugin extends JavaPlugin implements IRedirector, IConnector 
 		try {
 			this.getConnect().request(new RedirectRequest(server, username));
 		} catch(Exception exception) {
-			exception.printStackTrace();
+			// ignore
 		}
 	}
 	
@@ -132,7 +132,7 @@ public class PortalPlugin extends JavaPlugin implements IRedirector, IConnector 
 		try {
 			return this.getConnect().request(new RedirectRequest(server, username)).await().getStatusCode() == StatusCode.SUCCESS;
 		} catch(Exception exception) {
-			exception.printStackTrace();
+			// ignore
 		}
 		return false;
 	}
