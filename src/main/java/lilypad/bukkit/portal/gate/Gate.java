@@ -58,16 +58,16 @@ public class Gate {
 		return this.destinationServer;
 	}
 	
-	public int getOutwardX() {
-		return this.outwardX;
+	public double getOutwardX() {
+		return this.outwardX + 0.5;
 	}
 
 	public int getOutwardY() {
 		return this.outwardY;
 	}
 
-	public int getOutwardZ() {
-		return this.outwardZ;
+	public double getOutwardZ() {
+		return this.outwardZ + 0.5;
 	}
 
 	public int getOutwardYaw() {
