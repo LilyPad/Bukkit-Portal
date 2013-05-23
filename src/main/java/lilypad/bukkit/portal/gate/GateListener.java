@@ -1,6 +1,5 @@
 package lilypad.bukkit.portal.gate;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import lilypad.bukkit.portal.IRedirector;
@@ -12,14 +11,15 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
+
+import com.google.common.collect.MapMaker;
 
 public class GateListener implements Listener {
 	
 	private GateRegistry gateRegistry;
 	private IRedirector redirector;
 	
-	private Map<Player, Long> playersToLogins = new HashMap<Player, Long>();
+	private Map<Player, Long> playersToLogins = new MapMaker().weakKeys().makeMap();
 	
 	public GateListener(GateRegistry gateRegistry, IRedirector redirector) {
 		this.gateRegistry = gateRegistry;
@@ -29,11 +29,6 @@ public class GateListener implements Listener {
 	@EventHandler
 	public void onPlayerJoin(PlayerJoinEvent playerJoinEvent) {
 		this.playersToLogins.put(playerJoinEvent.getPlayer(), System.currentTimeMillis());
-	}
-	
-	@EventHandler
-	public void onPlayerQuit(PlayerQuitEvent playerQuitEvent) {
-		this.playersToLogins.remove(playerQuitEvent.getPlayer());
 	}
 	
 	@EventHandler
