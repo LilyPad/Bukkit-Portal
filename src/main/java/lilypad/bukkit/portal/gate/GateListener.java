@@ -37,10 +37,7 @@ public class GateListener implements Listener {
 		if(!player.hasPermission(PermissionConstants.PORTAL_USE)) {
 			return;
 		}
-		if(!this.playersToLogins.containsKey(player)) {
-			return;
-		}
-		if(System.currentTimeMillis() - this.playersToLogins.get(player) < 2500L) {
+		if(this.playersToLogins.containsKey(player) && System.currentTimeMillis() - this.playersToLogins.get(player) < 2500L) {
 			return;
 		}
 		Location to = playerMoveEvent.getTo();
