@@ -2,6 +2,7 @@ package lilypad.bukkit.portal.gate;
 
 import java.util.Map;
 
+import lilypad.bukkit.portal.IConfig;
 import lilypad.bukkit.portal.IRedirector;
 import lilypad.bukkit.portal.util.PermissionConstants;
 
@@ -16,12 +17,14 @@ import com.google.common.collect.MapMaker;
 
 public class GateListener implements Listener {
 	
+	private IConfig config;
 	private GateRegistry gateRegistry;
 	private IRedirector redirector;
 	
 	private Map<Player, Long> playersToLogins = new MapMaker().weakKeys().makeMap();
 	
-	public GateListener(GateRegistry gateRegistry, IRedirector redirector) {
+	public GateListener(IConfig config, GateRegistry gateRegistry, IRedirector redirector) {
+		this.config = config;
 		this.gateRegistry = gateRegistry;
 		this.redirector = redirector;
 	}
@@ -34,12 +37,6 @@ public class GateListener implements Listener {
 	@EventHandler
 	public void onPlayerMove(PlayerMoveEvent playerMoveEvent) {
 		Player player = playerMoveEvent.getPlayer();
-		if(!player.hasPermission(PermissionConstants.PORTAL_USE)) {
-			return;
-		}
-		if(this.playersToLogins.containsKey(player) && System.currentTimeMillis() - this.playersToLogins.get(player) < 2500L) {
-			return;
-		}
 		Location to = playerMoveEvent.getTo();
 		Location from = playerMoveEvent.getFrom();
 		Gate gate = this.gateRegistry.getByLocation(to);
@@ -47,6 +44,13 @@ public class GateListener implements Listener {
 			return;
 		}
 		if(gate.isInside(from)) {
+			return;
+		}
+		if(this.playersToLogins.containsKey(player) && System.currentTimeMillis() - this.playersToLogins.get(player) < 2500L) {
+			return;
+		}
+		if(player.hasPermission(PermissionConstants.PORTAL_USE)) {
+			player.sendMessage(this.config.getMessage("portal-no-permission").replace("{permission}", PermissionConstants.PORTAL_USE));
 			return;
 		}
 		this.redirector.requestRedirect(player, gate);

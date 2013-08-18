@@ -44,7 +44,7 @@ public class PortalPlugin extends JavaPlugin implements IRedirector, IConnector,
 	public void onEnable() {
 		try {
 			this.gateRegistry = new GateRegistry();
-			this.gateListener = new GateListener(this.gateRegistry, this);
+			this.gateListener = new GateListener(this, this.gateRegistry, this);
 			this.userRegistry = new UserRegistry();
 			this.userListener = new UserListener(this, this, this.gateRegistry, this.userRegistry, this, this);
 			this.createListener = new CreateListener(this, this.gateRegistry);
