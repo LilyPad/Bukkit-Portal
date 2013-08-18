@@ -3,6 +3,7 @@ package lilypad.bukkit.portal;
 import java.io.File;
 import java.util.Collections;
 
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -16,7 +17,6 @@ import lilypad.bukkit.portal.storage.impl.FileStorage;
 import lilypad.bukkit.portal.user.UserListener;
 import lilypad.bukkit.portal.user.UserRedirectorTask;
 import lilypad.bukkit.portal.user.UserRegistry;
-import lilypad.bukkit.portal.util.MessageConstants;
 import lilypad.client.connect.api.Connect;
 import lilypad.client.connect.api.request.impl.MessageRequest;
 import lilypad.client.connect.api.request.impl.RedirectRequest;
@@ -24,7 +24,7 @@ import lilypad.client.connect.api.result.FutureResultListener;
 import lilypad.client.connect.api.result.StatusCode;
 import lilypad.client.connect.api.result.impl.MessageResult;
 
-public class PortalPlugin extends JavaPlugin implements IRedirector, IConnector {
+public class PortalPlugin extends JavaPlugin implements IRedirector, IConnector, IConfig {
 
 	private GateRegistry gateRegistry;
 	private GateListener gateListener;
@@ -46,18 +46,18 @@ public class PortalPlugin extends JavaPlugin implements IRedirector, IConnector 
 			this.gateRegistry = new GateRegistry();
 			this.gateListener = new GateListener(this.gateRegistry, this);
 			this.userRegistry = new UserRegistry();
-			this.userListener = new UserListener(this, this.gateRegistry, this.userRegistry, this, this);
-			this.createListener = new CreateListener(this.gateRegistry);
+			this.userListener = new UserListener(this, this, this.gateRegistry, this.userRegistry, this, this);
+			this.createListener = new CreateListener(this, this.gateRegistry);
 			this.storage = new FileStorage(new File(this.getDataFolder(), "store_gate.dat"), new File(this.getDataFolder(), "store_user.dat"));
 			this.storage.setUserRegistry(this.userRegistry);
 			this.storage.loadUsers();
 			this.storage.setGateRegistry(this.gateRegistry);
 			this.storage.loadGates();
-			this.getServer().getPluginCommand("portal").setExecutor(new PortalCommandExecutor(this.gateRegistry, this.createListener));
-			this.getServer().getScheduler().scheduleSyncRepeatingTask(this, this.storage, 100L, 100L);
-			this.getServer().getPluginManager().registerEvents(this.gateListener, this);
-			this.getServer().getPluginManager().registerEvents(this.userListener, this);
-			this.getServer().getPluginManager().registerEvents(this.createListener, this);
+			super.getServer().getPluginCommand("portal").setExecutor(new PortalCommandExecutor(this, this.gateRegistry, this.createListener));
+			super.getServer().getScheduler().scheduleSyncRepeatingTask(this, this.storage, 100L, 100L);
+			super.getServer().getPluginManager().registerEvents(this.gateListener, this);
+			super.getServer().getPluginManager().registerEvents(this.userListener, this);
+			super.getServer().getPluginManager().registerEvents(this.createListener, this);
 			this.getConnect().registerMessageEventListener(this.userListener);
 		} catch(Exception exception) {
 			exception.printStackTrace();
@@ -101,7 +101,7 @@ public class PortalPlugin extends JavaPlugin implements IRedirector, IConnector 
 					if(messageResult.getStatusCode() == StatusCode.SUCCESS) {
 						return;
 					}
-					player.sendMessage(MessageConstants.format(MessageConstants.SERVER_OFFLINE));
+					player.sendMessage(PortalPlugin.this.getMessage("server-offline"));
 				}
 			});
 		} catch(Exception exception) {
@@ -135,16 +135,25 @@ public class PortalPlugin extends JavaPlugin implements IRedirector, IConnector 
 		return false;
 	}
 
-	public void redirectLastServer(String username, String server) {
-		if(!this.getConfig().getBoolean("redirectLastServer", false)) {
-			return;
-		}
-		UserRedirectorTask userRedirector = new UserRedirectorTask(username, server, this);
-		userRedirector.setTaskId(this.getServer().getScheduler().runTaskTimerAsynchronously(this, userRedirector, 20L, 100L).getTaskId());
+	public void redirectLastServer(Player player, String server) {
+		UserRedirectorTask userRedirector = new UserRedirectorTask(this, this, player, server);
+		userRedirector.setTaskId(super.getServer().getScheduler().runTaskTimerAsynchronously(this, userRedirector, 20L, 100L).getTaskId());
 	}
 	
 	public Connect getConnect() {
-		return this.getServer().getServicesManager().getRegistration(Connect.class).getProvider();
+		return super.getServer().getServicesManager().getRegistration(Connect.class).getProvider();
+	}
+
+	public boolean isRedirectLastServer() {
+		return super.getConfig().getBoolean("redirectLastServer", false);
+	}
+
+	public boolean isSpawnAtPortalEndpoint() {
+		return super.getConfig().getBoolean("spawnAtPortalEndpoint", false);
+	}
+
+	public String getMessage(String string) {
+		return ChatColor.translateAlternateColorCodes('&', super.getConfig().getString("messages." + string).replace("&n", "\n"));
 	}
 
 }

@@ -2,8 +2,8 @@ package lilypad.bukkit.portal.command.create;
 
 import java.util.Map;
 
+import lilypad.bukkit.portal.IConfig;
 import lilypad.bukkit.portal.gate.GateRegistry;
-import lilypad.bukkit.portal.util.MessageConstants;
 
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -19,9 +19,11 @@ import com.google.common.collect.MapMaker;
 public class CreateListener implements Listener {
 
 	private Map<Player, CreateSession> createSessions = new MapMaker().weakKeys().makeMap();
+	private IConfig config;
 	private GateRegistry gateRegistry;
 	
-	public CreateListener(GateRegistry gateRegistry) {
+	public CreateListener(IConfig config, GateRegistry gateRegistry) {
+		this.config = config;
 		this.gateRegistry = gateRegistry;
 	}
 	
@@ -43,19 +45,19 @@ public class CreateListener implements Listener {
 		case INWARD_CORNER_1:
 			createSession.setInwardCorner1(block);
 			createSession.setState(CreateSession.State.INWARD_CORNER_2);
-			player.sendMessage(MessageConstants.format(MessageConstants.CREATE_STEP_2));
+			player.sendMessage(this.config.getMessage("create-step-2"));
 			break;
 		case INWARD_CORNER_2:
 			createSession.setInwardCorner2(block);
 			createSession.setState(CreateSession.State.OUTWARD);
-			player.sendMessage(MessageConstants.format(MessageConstants.CREATE_STEP_3));
+			player.sendMessage(this.config.getMessage("create-step-3"));
 			break;
 		case OUTWARD:
 			createSession.setOutward(block.getRelative(BlockFace.UP));
 			createSession.setOutwardYaw((int) player.getLocation().getYaw());
 			this.gateRegistry.register(createSession.createGate());
 			this.createSessions.remove(player);
-			player.sendMessage(MessageConstants.format(MessageConstants.CREATE, createSession.getDestinationServer()));
+			player.sendMessage(this.config.getMessage("create").replace("{server}", createSession.getDestinationServer()));
 			break;
 		}
 	}

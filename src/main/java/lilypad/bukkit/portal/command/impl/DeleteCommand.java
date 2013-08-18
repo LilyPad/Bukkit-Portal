@@ -1,21 +1,22 @@
 package lilypad.bukkit.portal.command.impl;
 
+import lilypad.bukkit.portal.IConfig;
 import lilypad.bukkit.portal.command.Command;
 import lilypad.bukkit.portal.command.CommandPermissionException;
 import lilypad.bukkit.portal.command.CommandSyntaxException;
 import lilypad.bukkit.portal.gate.Gate;
 import lilypad.bukkit.portal.gate.GateRegistry;
-import lilypad.bukkit.portal.util.MessageConstants;
 import lilypad.bukkit.portal.util.PermissionConstants;
 
 import org.bukkit.entity.Player;
 
-
 public class DeleteCommand implements Command {
 
+	private IConfig config;
 	private GateRegistry gateRegistry;
 	
-	public DeleteCommand(GateRegistry gateRegistry) {
+	public DeleteCommand(IConfig config, GateRegistry gateRegistry) {
+		this.config = config;
 		this.gateRegistry = gateRegistry;
 	}
 	
@@ -26,14 +27,14 @@ public class DeleteCommand implements Command {
 		if(args.length < 1) {
 			throw new CommandSyntaxException("destinationServer");
 		}
-		String detinationServer = args[0];
-		Gate gate = this.gateRegistry.getByDestinationServer(detinationServer);
+		String destinationServer = args[0];
+		Gate gate = this.gateRegistry.getByDestinationServer(destinationServer);
 		if(gate == null) {
-			player.sendMessage(MessageConstants.format(MessageConstants.DELETE_NO_EXIST, detinationServer));
+			player.sendMessage(this.config.getMessage("delete-no-exists").replace("{server}", destinationServer));
 			return;
 		}
 		this.gateRegistry.unregister(gate);
-		player.sendMessage(MessageConstants.format(MessageConstants.DELETE_SUCCESS, detinationServer));
+		player.sendMessage(this.config.getMessage("delete").replace("{server}", destinationServer));
 	}
 
 	public String getId() {

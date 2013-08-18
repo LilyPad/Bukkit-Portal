@@ -1,15 +1,20 @@
 package lilypad.bukkit.portal.command;
 
-import lilypad.bukkit.portal.util.MessageConstants;
+import lilypad.bukkit.portal.IConfig;
 import lilypad.bukkit.portal.util.StringUtils;
 
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-
 public abstract class CommandRegistryExecutor extends CommandRegistry implements CommandExecutor {
 
+	private IConfig config;
+	
+	public CommandRegistryExecutor(IConfig config) {
+		this.config = config;
+	}
+	
 	public boolean onCommand(CommandSender sender, org.bukkit.command.Command __unused, String _unused, String[] args) {
 		do {
 			if(!(sender instanceof Player)) {
@@ -17,7 +22,7 @@ public abstract class CommandRegistryExecutor extends CommandRegistry implements
 				break;
 			}
 			if(args.length == 0) {
-				sender.sendMessage(MessageConstants.format(MessageConstants.COMMAND_NO_SYNTAX, "/" + this.getId() + " [command] <sub>"));
+				sender.sendMessage(this.config.getMessage("command-no-syntax").replace("{syntax}", "/" + this.getId() + " [command] <sub>"));
 				break;
 			}
 			Player player = (Player) sender;
@@ -30,15 +35,15 @@ public abstract class CommandRegistryExecutor extends CommandRegistry implements
 			}
 			Command command = this.getById(commandLabel);
 			if(command == null) {
-				player.sendMessage(MessageConstants.format(MessageConstants.COMMAND_NO, "/" + this.getId() + " help"));
+				player.sendMessage(this.config.getMessage("command-no-exists").replace("{command}", "/" + this.getId() + " help"));
 				break;
 			}
 			try {
 				command.execute(player, commandArgs);
 			} catch(CommandSyntaxException commandSyntaxException) {
-				player.sendMessage(MessageConstants.format(MessageConstants.COMMAND_NO_SYNTAX, commandSyntaxException.getSyntax()));
+				player.sendMessage(this.config.getMessage("command-no-syntax").replace("{syntax}", commandSyntaxException.getSyntax()));
 			} catch(CommandPermissionException commandPermissionException) {
-				player.sendMessage(MessageConstants.format(MessageConstants.COMMAND_NO_PERMISSION, commandPermissionException.getPermission()));
+				player.sendMessage(this.config.getMessage("command-no-permission").replace("{permission}", commandPermissionException.getPermission()));
 			}
 		} while(false);
 		return true;

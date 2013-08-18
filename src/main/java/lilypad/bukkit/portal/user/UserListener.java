@@ -1,5 +1,6 @@
 package lilypad.bukkit.portal.user;
 
+import lilypad.bukkit.portal.IConfig;
 import lilypad.bukkit.portal.IConnector;
 import lilypad.bukkit.portal.IRedirector;
 import lilypad.bukkit.portal.gate.Gate;
@@ -19,13 +20,15 @@ import org.bukkit.plugin.Plugin;
 public class UserListener implements Listener, MessageEventListener {
 
 	private Plugin plugin;
+	private IConfig config;
 	private GateRegistry gateRegistry;
 	private UserRegistry userRegistry;
 	private IConnector connector;
 	private IRedirector redirector;
 
-	public UserListener(Plugin plugin, GateRegistry gateRegistry, UserRegistry userRegistry, IConnector connector, IRedirector redirector) {
+	public UserListener(Plugin plugin, IConfig config, GateRegistry gateRegistry, UserRegistry userRegistry, IConnector connector, IRedirector redirector) {
 		this.plugin = plugin;
+		this.config = config;
 		this.gateRegistry = gateRegistry;
 		this.userRegistry = userRegistry;
 		this.connector = connector;
@@ -38,25 +41,27 @@ public class UserListener implements Listener, MessageEventListener {
 		User user = this.getUser(player.getName());
 		String fromServer = user.getFromServer();
 		if(fromServer == null) {
-			if(user.getServer().equals(this.connector.getConnect().getSettings().getUsername())) {
-				return;
+			if(this.config.isRedirectLastServer()) {
+				if(user.getServer().equals(this.connector.getConnect().getSettings().getUsername())) {
+					return;
+				}
+				this.redirector.redirectLastServer(player, user.getServer());
 			}
-			this.redirector.redirectLastServer(user.getName(), user.getServer());
 			return;
 		}
 		this.redirector.announceRedirect(player);
 		user.setServer(this.connector.getConnect().getSettings().getUsername());
 		user.setFromServer(null);
-		if(this.plugin.getConfig().getBoolean("spawnAtPortalEndpoint", false)) {
+		if(this.config.isSpawnAtPortalEndpoint()) {
 			final Gate gate = this.gateRegistry.getByDestinationServer(fromServer);
 			if(gate == null) {
 				return;
 			}
-			this.plugin.getServer().getScheduler().scheduleSyncDelayedTask(this.plugin, new Runnable() {
+			player.getServer().getScheduler().runTask(this.plugin, new Runnable() {
 				public void run() {
 					player.teleport(new Location(Bukkit.getServer().getWorld(gate.getOutwardWorld()), gate.getOutwardX(), gate.getOutwardY(), gate.getOutwardZ(), gate.getOutwardYaw(), 0));
 				}
-			}, 1L);
+			});
 		}
 	}
 
