@@ -1,4 +1,4 @@
-package lilypad.bukkit.portal.plugin;
+package lilypad.bukkit.portal;
 
 import java.io.File;
 import java.util.Collections;
@@ -6,8 +6,6 @@ import java.util.Collections;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import lilypad.bukkit.portal.IConnector;
-import lilypad.bukkit.portal.IRedirector;
 import lilypad.bukkit.portal.command.PortalCommandExecutor;
 import lilypad.bukkit.portal.command.create.CreateListener;
 import lilypad.bukkit.portal.gate.Gate;
