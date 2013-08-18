@@ -9,9 +9,9 @@ import lilypad.bukkit.portal.gate.GateRegistry;
 public class PortalCommandExecutor extends CommandRegistryExecutor {
 
 	public PortalCommandExecutor(GateRegistry gateRegistry, CreateListener createListener) {
-		this.submit(new CreateCommand(gateRegistry, createListener));
-		this.submit(new DeleteCommand(gateRegistry));
-		this.submit(new ListCommand(gateRegistry));
+		super.submit(new CreateCommand(gateRegistry, createListener));
+		super.submit(new DeleteCommand(gateRegistry));
+		super.submit(new ListCommand(gateRegistry));
 	}
 	
 	public String getId() {

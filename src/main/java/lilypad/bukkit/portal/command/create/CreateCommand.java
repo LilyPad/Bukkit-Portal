@@ -9,7 +9,6 @@ import lilypad.bukkit.portal.util.PermissionConstants;
 
 import org.bukkit.entity.Player;
 
-
 public class CreateCommand implements Command {
 
 	private GateRegistry gateRegistry;

@@ -1,2 +1,19 @@
 redirectLastServer: false
 spawnAtPortalEndpoint: false
+messages:
+  server-offline: '&f[&7Portal&f] This server is currently &4offline&f. Try again later!'
+  server-offline-redirect: '&f[&7Portal&f] Your last server is currently &4offline&f. If you join&n&f[&7Portal&f] another server, you will lose your last position.&n&f[&7Portal&f] &2You will be redirected when it becomes available.'
+  command-no-syntax: '&f[&7Portal&f] &cYou do not have the required syntax &f(&4{syntax}&f)'
+  command-no-permission: '&f[&7Portal&f] &cYou do not have the required permission &f(&4{permission}&f)'
+  command-no-exists: '&f[&7Portal&f] &cThe specified command does not exist &f(&4{command}&f)'
+  create-already-exists: '&f[&7Portal&f] &cThere is already a gate leading to the specified server &f(&4{server}&f)'
+  create-step-1: '&f[&7Portal&f] Right click on one of the &6corner blocks &fof the gate'
+  create-step-2: '&f[&7Portal&f] Right click on the &6opposite corner &fblock of the gate'
+  create-step-3: '&f[&7Portal&f] Right click on the &6outward block &fof the gate (&6be wary of the direction you face&f)'
+  create: '&f[&7Portal&f] You have successfully created a portal going to &6{server}'
+  delete-no-exists: '&f[&7Portal&f] &cThere is no gate leading to the specified server &f(&4%s&f)'
+  delete: '&f[&7Portal&f] The gate leading to &6%s &fhas been deleted'
+  gate-no-permission: '&f[&7Portal&f] &cYou do not have the required permission &f(&4{permission}&f)'
+  gate-list: '&f[&7Portal&f] &6Gates: &f{gates}'
+  gate: '{gate}'
+  
