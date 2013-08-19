@@ -49,8 +49,8 @@ public class GateListener implements Listener {
 		if(this.playersToLogins.containsKey(player) && System.currentTimeMillis() - this.playersToLogins.get(player) < 2500L) {
 			return;
 		}
-		if(player.hasPermission(PermissionConstants.PORTAL_USE)) {
-			player.sendMessage(this.config.getMessage("portal-no-permission").replace("{permission}", PermissionConstants.PORTAL_USE));
+		if(!player.hasPermission(PermissionConstants.PORTAL_USE)) {
+			player.sendMessage(this.config.getMessage("gate-no-permission").replace("{permission}", PermissionConstants.PORTAL_USE));
 			return;
 		}
 		this.redirector.requestRedirect(player, gate);
