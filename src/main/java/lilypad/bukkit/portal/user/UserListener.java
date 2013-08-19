@@ -5,9 +5,8 @@ import lilypad.bukkit.portal.IConnector;
 import lilypad.bukkit.portal.IRedirector;
 import lilypad.bukkit.portal.gate.Gate;
 import lilypad.bukkit.portal.gate.GateRegistry;
-import lilypad.client.connect.api.Connect;
-import lilypad.client.connect.api.MessageEvent;
-import lilypad.client.connect.api.MessageEventListener;
+import lilypad.client.connect.api.event.EventListener;
+import lilypad.client.connect.api.event.MessageEvent;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -17,7 +16,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.Plugin;
 
-public class UserListener implements Listener, MessageEventListener {
+public class UserListener implements Listener {
 
 	private Plugin plugin;
 	private IConfig config;
@@ -65,7 +64,8 @@ public class UserListener implements Listener, MessageEventListener {
 		}
 	}
 
-	public void onMessage(Connect connect, MessageEvent messageEvent) {
+	@EventListener
+	public void onMessage(MessageEvent messageEvent) {
 		if(!messageEvent.getChannel().equals("lpPortal")) {
 			return;
 		}

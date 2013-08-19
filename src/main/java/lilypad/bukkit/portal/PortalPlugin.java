@@ -58,7 +58,7 @@ public class PortalPlugin extends JavaPlugin implements IRedirector, IConnector,
 			super.getServer().getPluginManager().registerEvents(this.gateListener, this);
 			super.getServer().getPluginManager().registerEvents(this.userListener, this);
 			super.getServer().getPluginManager().registerEvents(this.createListener, this);
-			this.getConnect().registerMessageEventListener(this.userListener);
+			this.getConnect().registerEvents(this.userListener);
 		} catch(Exception exception) {
 			exception.printStackTrace();
 		}
@@ -71,7 +71,7 @@ public class PortalPlugin extends JavaPlugin implements IRedirector, IConnector,
 	public void onDisable() {
 		try {
 			if(this.getConnect() != null) {
-				this.getConnect().unregisterMessageEventListener(this.userListener);
+				this.getConnect().unregisterEvents(this.userListener);
 			}
 			if(this.storage != null) {
 				this.storage.saveAll();
