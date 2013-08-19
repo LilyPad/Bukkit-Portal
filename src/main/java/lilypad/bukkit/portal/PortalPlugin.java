@@ -136,8 +136,7 @@ public class PortalPlugin extends JavaPlugin implements IRedirector, IConnector,
 	}
 
 	public void redirectLastServer(Player player, String server) {
-		UserRedirectorTask userRedirector = new UserRedirectorTask(this, this, player, server);
-		userRedirector.setTaskId(super.getServer().getScheduler().runTaskTimerAsynchronously(this, userRedirector, 20L, 100L).getTaskId());
+		new UserRedirectorTask(this, this, player, server).runTaskTimerAsynchronously(this, 20L, 100L);
 	}
 	
 	public Connect getConnect() {

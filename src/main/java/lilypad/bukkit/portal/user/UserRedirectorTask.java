@@ -2,12 +2,12 @@ package lilypad.bukkit.portal.user;
 
 import lilypad.bukkit.portal.IConfig;
 import lilypad.bukkit.portal.IRedirector;
-import lilypad.bukkit.portal.Task;
 
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
 
-public class UserRedirectorTask extends Task {
+public class UserRedirectorTask extends BukkitRunnable {
 
 	private IConfig config;
 	private IRedirector redirector;
@@ -26,7 +26,7 @@ public class UserRedirectorTask extends Task {
 		String user = this.player.getName();
 		Server server = this.player.getServer();
 		if(server.getPlayerExact(this.player.getName()) == null) {
-			this.cancelTask();
+			super.cancel();
 			return;
 		}
 		if(!this.redirector.redirectResult(user, this.server) && !this.notified) {
