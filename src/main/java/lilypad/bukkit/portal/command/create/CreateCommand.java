@@ -16,6 +16,7 @@ public class CreateCommand implements Command {
 	private CreateListener createListener;
 	
 	public CreateCommand(IConfig config, GateRegistry gateRegistry, CreateListener createListener) {
+		this.config = config;
 		this.gateRegistry = gateRegistry;
 		this.createListener = createListener;
 	}

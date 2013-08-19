@@ -16,6 +16,7 @@ public class UserRedirectorTask extends Task {
 	private boolean notified;
 	
 	public UserRedirectorTask(IConfig config, IRedirector redirector, Player player, String server) {
+		this.config = config;
 		this.player = player;
 		this.server = server;
 		this.redirector = redirector;
