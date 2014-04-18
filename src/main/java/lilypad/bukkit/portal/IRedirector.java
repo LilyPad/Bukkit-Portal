@@ -14,6 +14,4 @@ public interface IRedirector {
 	
 	public boolean redirectResult(String username, String server);
 	
-	public void redirectLastServer(Player player, String server);
-	
 }

@@ -15,8 +15,6 @@ import lilypad.bukkit.portal.gate.GateRegistry;
 import lilypad.bukkit.portal.storage.Storage;
 import lilypad.bukkit.portal.storage.impl.FileStorage;
 import lilypad.bukkit.portal.user.UserListener;
-import lilypad.bukkit.portal.user.UserRedirectorTask;
-import lilypad.bukkit.portal.user.UserRegistry;
 import lilypad.client.connect.api.Connect;
 import lilypad.client.connect.api.request.impl.MessageRequest;
 import lilypad.client.connect.api.request.impl.RedirectRequest;
@@ -28,7 +26,6 @@ public class PortalPlugin extends JavaPlugin implements IRedirector, IConnector,
 
 	private GateRegistry gateRegistry;
 	private GateListener gateListener;
-	private UserRegistry userRegistry;
 	private UserListener userListener;
 	private CreateListener createListener;
 	private Storage storage;
@@ -45,25 +42,18 @@ public class PortalPlugin extends JavaPlugin implements IRedirector, IConnector,
 		try {
 			this.gateRegistry = new GateRegistry();
 			this.gateListener = new GateListener(this, this.gateRegistry, this);
-			this.userRegistry = new UserRegistry();
-			this.userListener = new UserListener(this, this, this.gateRegistry, this.userRegistry, this, this);
+			this.userListener = new UserListener(this, this);
 			this.createListener = new CreateListener(this, this.gateRegistry);
-			this.storage = new FileStorage(new File(this.getDataFolder(), "store_gate.dat"), new File(this.getDataFolder(), "store_user.dat"));
-			this.storage.setUserRegistry(this.userRegistry);
-			this.storage.loadUsers();
+			this.storage = new FileStorage(new File(this.getDataFolder(), "store_gate.dat"));
 			this.storage.setGateRegistry(this.gateRegistry);
 			this.storage.loadGates();
 			super.getServer().getPluginCommand("portal").setExecutor(new PortalCommandExecutor(this, this.gateRegistry, this.createListener));
-			super.getServer().getScheduler().scheduleSyncRepeatingTask(this, this.storage, 100L, 100L);
 			super.getServer().getPluginManager().registerEvents(this.gateListener, this);
 			super.getServer().getPluginManager().registerEvents(this.userListener, this);
 			super.getServer().getPluginManager().registerEvents(this.createListener, this);
 			this.getConnect().registerEvents(this.userListener);
 		} catch(Exception exception) {
 			exception.printStackTrace();
-		}
-		for(Player player : this.getServer().getOnlinePlayers()) {
-			this.userListener.getUser(player.getName());
 		}
 	}
 
@@ -79,15 +69,11 @@ public class PortalPlugin extends JavaPlugin implements IRedirector, IConnector,
 			if(this.gateRegistry != null) {
 				this.gateRegistry.clear();
 			}
-			if(this.userRegistry != null) {
-				this.userRegistry.clear();
-			}
 		} catch(Exception exception) {
 			exception.printStackTrace();
 		} finally {
 			this.gateRegistry = null;
 			this.gateListener = null;
-			this.userRegistry = null;
 			this.userListener = null;
 			this.createListener = null;
 			this.storage = null;
@@ -135,16 +121,8 @@ public class PortalPlugin extends JavaPlugin implements IRedirector, IConnector,
 		return false;
 	}
 
-	public void redirectLastServer(Player player, String server) {
-		new UserRedirectorTask(this, this, player, server).runTaskTimerAsynchronously(this, 20L, 100L);
-	}
-	
 	public Connect getConnect() {
 		return super.getServer().getServicesManager().getRegistration(Connect.class).getProvider();
-	}
-
-	public boolean isRedirectLastServer() {
-		return super.getConfig().getBoolean("redirectLastServer", false);
 	}
 
 	public boolean isSpawnAtPortalEndpoint() {

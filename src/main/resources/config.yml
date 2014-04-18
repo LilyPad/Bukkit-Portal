@@ -1,4 +1,3 @@
-redirectLastServer: false
 spawnAtPortalEndpoint: false
 messages:
   server-offline: '&f[&7Portal&f] This server is currently &4offline&f. Try again later!'
