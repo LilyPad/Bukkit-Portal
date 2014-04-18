@@ -1,8 +1,6 @@
 package lilypad.bukkit.portal;
 
 public interface IConfig {
-
-	public boolean isRedirectLastServer();
 	
 	public boolean isSpawnAtPortalEndpoint();
 	
