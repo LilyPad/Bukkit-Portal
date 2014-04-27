@@ -12,6 +12,7 @@ public class Gate {
 	private int inwardMinZ;
 	private int inwardMaxZ;
 	private String inwardWorld;
+	// TODO We should probably re-implement spawn-at-portal-endpoint eventually
 	private int outwardX;
 	private int outwardY;
 	private int outwardZ;
