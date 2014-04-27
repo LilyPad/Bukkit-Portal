@@ -6,6 +6,8 @@ import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import com.google.common.io.Files;
+
 import lilypad.bukkit.portal.command.PortalCommandExecutor;
 import lilypad.bukkit.portal.command.create.CreateListener;
 import lilypad.bukkit.portal.gate.GateListener;
@@ -34,12 +36,27 @@ public class PortalPlugin extends JavaPlugin implements IRedirector, IConfig {
 	}
 
 	@Override
-	public void onEnable() {	
+	public void onEnable() {
+		// convert old store_gate.dat -> gates.dat
+		File oldGatesFile = new File(super.getDataFolder(), "store_gate.dat");
+		File gatesFile = new File(super.getDataFolder(), "gates.dat");
+		if(oldGatesFile.exists()) {
+			if(gatesFile.exists()) {
+				oldGatesFile.delete();
+			} else {
+				try {
+					Files.move(oldGatesFile, gatesFile);
+				} catch(Exception exception) {
+					exception.printStackTrace(); // what do?
+				}
+			}
+		}
+		
 		try {
 			this.gateRegistry = new GateRegistry();
 			this.gateListener = new GateListener(this, this.gateRegistry, this);
 			this.createListener = new CreateListener(this, this.gateRegistry);
-			this.storage = new FileStorage(new File(super.getDataFolder(), "store_gate.dat"));
+			this.storage = new FileStorage(gatesFile);
 			this.storage.setGateRegistry(this.gateRegistry);
 			this.storage.loadGates();
 			super.getServer().getPluginCommand("portal").setExecutor(new PortalCommandExecutor(this, this.gateRegistry, this.createListener));
