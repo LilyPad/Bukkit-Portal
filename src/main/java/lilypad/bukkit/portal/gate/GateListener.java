@@ -53,7 +53,7 @@ public class GateListener implements Listener {
 			player.sendMessage(this.config.getMessage("gate-no-permission").replace("{permission}", PermissionConstants.PORTAL_USE));
 			return;
 		}
-		this.redirector.requestRedirect(player, gate);
+		this.redirector.redirect(player, gate.getDestinationServer());
 	}
 	
 }
